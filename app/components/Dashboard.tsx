@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Cell, Pie, PieChart, Tooltip } from 'recharts';
 import { ListItem, useAppContext } from '~/root';
 import Formulary from './Formulary';
+import { IoIosClose, IoMdTrash } from 'react-icons/io';
 
 
 export default function DashboardComponent() {
@@ -78,8 +79,9 @@ console.log(listItems)
                   className="flex justify-between items-center p-4 bg-gray-50 hover:bg-blue-50 rounded-md transition-colors"
                 >
                   <span className="font-medium">{item.title}</span>
-                  <span className={`${item.type=="ingreso"?'text-green-600':'text-red-600'} font-semibold`}>
+                  <span className={`${item.type=="ingreso"?'text-green-600':'text-red-600'} font-semibold flex gap-4 items-center justify-center`}>
                     {item.value}
+                    <button className='text-black text-xl hover:text-gray-900 hover:drop-shadow-lg  hover:shadow-red-600 transition-all' title='Eliminar movimiento' onClick={()=>deleteItem(item.id)}><IoMdTrash /></button>
                   </span>
                 </li>
               ))}
