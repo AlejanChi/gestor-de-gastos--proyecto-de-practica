@@ -2,6 +2,7 @@ import { useLoaderData } from '@remix-run/react';
 import { useEffect, useState } from 'react';
 import { Cell, Pie, PieChart, Tooltip } from 'recharts';
 import { ListItem, useAppContext } from '~/root';
+import Formulary from './Formulary';
 
 
 export default function DashboardComponent() {
@@ -9,6 +10,8 @@ export default function DashboardComponent() {
   const [total,setTotal] = useState<number>(0);
   const [ingresos,setIngresos] = useState<number>(0);
   const [egresos,setEgresos] = useState<number>(0);
+  const [visibleForm, setVisible] = useState<boolean>(false)
+  const [typeOperation, setTypeOperation] = useState<"ingreso"|"egreso">("ingreso")
   const dataChart = [
     { name: "Ingresos", value: ingresos },
     { name: "Egresos", value: egresos },
@@ -32,13 +35,15 @@ useEffect(()=>{
   })
 },[listItems])
 
-// useEffect(()=>{
-//   addItem(newItem)
-// },[])
+const operation = (type:"ingreso"|"egreso") =>{
+  setTypeOperation(type)
+  setVisible(true)
+}
 
 console.log(listItems)
   return (
     <div className="w-full p-6 bg-gray-900">
+      {visibleForm && (<Formulary visible={setVisible} type={typeOperation}/>)}      
       {/* Contenedor principal con grid de 3 filas */}
       <div className="h-full grid grid-cols-2 gap-4">
         
@@ -53,12 +58,32 @@ console.log(listItems)
             <p className="text-xl font-bold text-green-600">{ingresos}</p>
           </div>
           <div className='bg-gray-400 p-2 rounded-md flex gap-4 w-fit'>
-            <button className='btn-red'>
+            <button className='btn-red' onClick={()=>operation("egreso")}>
               Gasto
             </button>
-            <button className='btn-green'>
+            <button className='btn-green' onClick={()=>operation("ingreso")}>
               Ingreso
             </button>
+          </div>
+        </div>
+        
+{/* Tercera fila - Lista de elementos con scroll */}
+<div className="bg-white rounded-lg p-6 shadow-sm overflow-hidden row-span-2">
+          <h2 className="text-xl font-semibold mb-4">Lista de Elementos</h2>
+          <div className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-blue-50">
+            <ul className="space-y-3">
+              {listItems.map((item) => (
+                <li 
+                  key={item.id}
+                  className="flex justify-between items-center p-4 bg-gray-50 hover:bg-blue-50 rounded-md transition-colors"
+                >
+                  <span className="font-medium">{item.title}</span>
+                  <span className={`${item.type=="ingreso"?'text-green-600':'text-red-600'} font-semibold`}>
+                    {item.value}
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
@@ -94,25 +119,7 @@ console.log(listItems)
           </div>
         </div>
 
-        {/* Tercera fila - Lista de elementos con scroll */}
-        <div className="bg-white rounded-lg p-6 shadow-sm overflow-hidden col-span-2">
-          <h2 className="text-xl font-semibold mb-4">Lista de Elementos</h2>
-          <div className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-blue-50">
-            <ul className="space-y-3">
-              {listItems.map((item) => (
-                <li 
-                  key={item.id}
-                  className="flex justify-between items-center p-4 bg-gray-50 hover:bg-blue-50 rounded-md transition-colors"
-                >
-                  <span className="font-medium">{item.title}</span>
-                  <span className={`${item.type=="ingreso"?'text-green-600':'text-red-600'} font-semibold`}>
-                    {item.value}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+        
       </div>
     </div>
   );

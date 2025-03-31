@@ -1,4 +1,4 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { ActionFunctionArgs, MetaFunction } from "@remix-run/node";
 import DashboardComponent from "~/components/Dashboard";
 
 
@@ -9,7 +9,12 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const formData = await request.formData();
+  console.log("data recibida:",formData)
 
+  return null
+}
 
 export function loader() {
   // Datos de ejemplo, puedes modificar según necesites
